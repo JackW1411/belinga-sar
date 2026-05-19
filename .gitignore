@@ -1,0 +1,7 @@
+.venv/
+downloads/
+georef/
+outputs/
+__pycache__/
+*.pyc
+.env
