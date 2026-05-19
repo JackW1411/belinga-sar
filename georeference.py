@@ -28,8 +28,7 @@ def parse_gcps(xml_path):
 
 
 def find_safe_files(safe_path, polarisation):
-    """Find tiff and xml for a given polarisation (vv or vh) inside a .SAFE dir."""
-    safe = Path(safe_path)
+    safe = Path(safe_path).resolve()  # add .resolve() here
     pol = polarisation.lower()
 
     tiffs = list((safe / "measurement").glob(f"*-{pol}-*.tiff"))

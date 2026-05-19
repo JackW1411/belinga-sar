@@ -1,4 +1,6 @@
 import os
+os.environ["PROJ_DATA"] = r".venv\Lib\site-packages\rasterio\proj_data"
+os.environ["PROJ_LIB"] = r".venv\Lib\site-packages\rasterio\proj_data"
 import json
 from pathlib import Path
 from datetime import datetime

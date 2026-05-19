@@ -11,7 +11,7 @@ VH_STACK   = f"{STACK_DIR}/vh_stack.npy"
 DATES_FILE = f"{STACK_DIR}/dates.json"
 
 # Confirmed after first scene -- update if different
-H, W = 2570, 1630
+H, W = 2569, 1630
 
 PRE_END   = datetime(2021, 1, 1)
 THRESHOLD = 0.64  # dB, Carstairs et al. 2022

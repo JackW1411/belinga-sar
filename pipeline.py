@@ -54,16 +54,23 @@ def search_scenes(start, end, token):
 def download_and_extract(scene, token, out_dir="downloads"):
     os.makedirs(out_dir, exist_ok=True)
     name = scene["Name"]
-    safe_path = os.path.join(out_dir, f"{name}.SAFE")
+    safe_path = os.path.join(out_dir, name)
 
-    # Skip if already extracted
     if os.path.exists(safe_path):
         print(f"  Already extracted: {name}")
         return safe_path
 
     zip_path = os.path.join(out_dir, f"{name}.zip")
 
-    # Download if zip not present
+    # Check for corrupt zip
+    if os.path.exists(zip_path):
+        try:
+            with zipfile.ZipFile(zip_path, 'r') as z:
+                z.testzip()
+        except zipfile.BadZipFile:
+            print(f"  Corrupt zip, re-downloading...")
+            os.remove(zip_path)
+
     if not os.path.exists(zip_path):
         product_id = scene["Id"]
         url = f"https://download.dataspace.copernicus.eu/odata/v1/Products({product_id})/$value"
@@ -86,7 +93,6 @@ def download_and_extract(scene, token, out_dir="downloads"):
                         print(f"\r  {name}: {pct:.1f}% ({downloaded/1e6:.0f}/{total/1e6:.0f} MB)", end="", flush=True)
         print()
 
-    # Extract and delete zip
     print(f"  Extracting {name}...")
     with zipfile.ZipFile(zip_path, 'r') as z:
         z.extractall(out_dir)
@@ -94,7 +100,6 @@ def download_and_extract(scene, token, out_dir="downloads"):
     print(f"  Extracted, zip deleted")
 
     return safe_path
-
 
 def get_all_scenes(token):
     print("Searching baseline scenes (2019-2021)...")
