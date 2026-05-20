@@ -30,7 +30,11 @@ def load_band(path):
 
 
 def prepare_scene(vv_path, vh_path):
-    """Load, convert to dB, apply Lee filter. Returns (vv_db, vh_db)."""
+    """Load and convert to linear power. Returns (vv_linear, vh_linear)."""
     vv_raw, _ = load_band(vv_path)
     vh_raw, _ = load_band(vh_path)
-    return lee_filter(to_db(vv_raw)), lee_filter(to_db(vh_raw))
+    vv_raw[vv_raw == 0] = np.nan
+    vh_raw[vh_raw == 0] = np.nan
+    vv_linear = lee_filter(vv_raw.astype(np.float32) ** 2)
+    vh_linear = lee_filter(vh_raw.astype(np.float32) ** 2)
+    return vv_linear, vh_linear
